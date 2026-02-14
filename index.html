@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Forever Valentine ❤️</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+body {
+    background: linear-gradient(135deg, #ff758c, #ff7eb3);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 40px 20px;
+    overflow-x: hidden;
+}
+
+.container {
+    background: rgba(255,255,255,0.95);
+    padding: 40px;
+    border-radius: 25px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+    text-align: center;
+    width: 90%;
+    max-width: 650px;
+    position: relative;
+}
+
+h1 {
+    color: #e91e63;
+    margin-bottom: 20px;
+}
+
+.quote {
+    font-size: 1.2rem;
+    margin-bottom: 25px;
+    min-height: 180px;
+    line-height: 1.6;
+    word-wrap: break-word;
+}
+
+button {
+    background: #e91e63;
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+button:hover {
+    transform: scale(1.08);
+}
+
+.music-control {
+    margin-top: 10px;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+/* Vinyl Player */
+.player {
+    margin-top: 25px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.vinyl {
+    width: 120px;
+    height: 120px;
+    background: radial-gradient(circle, #111 30%, #000 60%);
+    border-radius: 50%;
+    position: relative;
+    animation: spin 3s linear infinite;
+}
+
+.vinyl::after {
+    content: "";
+    width: 30px;
+    height: 30px;
+    background: #e91e63;
+    border-radius: 50%;
+    position: absolute;
+    top: 45px;
+    left: 45px;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.now-playing {
+    margin-top: 12px;
+    font-size: 0.9rem;
+    color: #555;
+}
+
+/* Floating hearts */
+.heart {
+    position: absolute;
+    color: rgba(233,30,99,0.3);
+    animation: float 6s linear infinite;
+}
+
+@keyframes float {
+    0% { transform: translateY(100vh); opacity: 1; }
+    100% { transform: translateY(-10vh); opacity: 0; }
+}
+</style>
+</head>
+<body>
+
+<audio id="audio1"></audio>
+<audio id="audio2"></audio>
+
+<div class="container">
+    <h1>Happy Valentine's Day 😘</h1>
+    <div class="quote" id="quote">
+        I love you more than my laptop… and that says a LOT.
+    </div>
+    <button onclick="newQuote()">Give Me Another Cute Attack 💘</button>
+    <div class="music-control" onclick="toggleMusic()">🔊 Toggle Music</div>
+
+    <div class="player">
+        <div class="vinyl"></div>
+        <div class="now-playing" id="nowPlaying">
+            Now Playing: Perfect – Ed Sheeran
+        </div>
+    </div>
+</div>
+
+<script>
+const messages = [
+"I love you more than my laptop… and that says a LOT.",
+"If loving you was a job, I’d be employee of the year.",
+"You stole my heart. Honestly? Keep it.",
+"You’re my favorite notification.",
+"You’re the only person I’d share my fries with.",
+"NOW LETS GET LOVEY DOVEY",
+"Happy Valsday, CHUPS ❤️! You’re the reason I smile every day. I’m so lucky to have you in my life. Here’s to many more years of love and laughter together! ❤️ This is my gift to you this year the bigger gift will be my 60kg self 😂. I can go on and on about how lovely you are, and chaarle, I don’t mind doing that at all. Today is not the only day to celebrate love, but it’s a special reminder of how much you mean to me. I hope your day is filled with all the love and happiness you deserve. I love you more than words can express so a kiss will do 😘😂💖.",
+"Metsɔ wò ɖe nye dzi, eye mele asiwò ɖe nye agbe me. 💖"
+];
+
+function newQuote() {
+    const q = document.getElementById("quote");
+    q.style.opacity = 0;
+
+    setTimeout(() => {
+        currentMessageIndex++;
+        if (currentMessageIndex >= messages.length) {
+            currentMessageIndex = 0;
+        }
+        q.textContent = messages[currentMessageIndex];
+        q.style.opacity = 1;
+    }, 300);
+}
+
+
+/* Floating hearts */
+function createHeart() {
+    const heart = document.createElement("div");
+    heart.classList.add("heart");
+    heart.style.left = Math.random() * 100 + "vw";
+    heart.style.fontSize = (Math.random()*25+15)+"px";
+    heart.textContent = "❤";
+    document.body.appendChild(heart);
+    setTimeout(()=>heart.remove(),6000);
+}
+setInterval(createHeart,500);
+
+/* 🎵 Crossfade Playlist */
+
+const tracks = [
+    {file:"perfect.mp3", name:"Perfect – Ed Sheeran"},
+    {file:"canttakemyeyes.mp3", name:"Can't Take My Eyes Off You – Frankie Valli"},
+    {file:"hardtofind.mp3", name:"Hard to Find - Chike,Flavour"},
+    {file:"Lucky.mp3", name:"Lucky - Jason Mraz"}
+];
+
+let currentMessageIndex = 0;
+let currentTrack = 0;
+let currentAudio = document.getElementById("audio1");
+let nextAudio = document.getElementById("audio2");
+let isPlaying = false;
+
+currentAudio.volume = 0.3;
+nextAudio.volume = 0;
+
+function playTrack(index){
+    currentAudio.src = tracks[index].file;
+    document.getElementById("nowPlaying").textContent =
+        "Now Playing: " + tracks[index].name;
+    currentAudio.play();
+}
+
+function crossfade(){
+    nextAudio.src = tracks[(currentTrack+1)%tracks.length].file;
+    nextAudio.play();
+
+    let fadeDuration = 3000;
+    let steps = 30;
+    let stepTime = fadeDuration/steps;
+    let step = 0;
+
+    let fade = setInterval(()=>{
+        step++;
+        currentAudio.volume = 0.3*(1-step/steps);
+        nextAudio.volume = 0.3*(step/steps);
+
+        if(step>=steps){
+            clearInterval(fade);
+            currentAudio.pause();
+            currentAudio.volume=0.3;
+
+            let temp=currentAudio;
+            currentAudio=nextAudio;
+            nextAudio=temp;
+
+            currentTrack=(currentTrack+1)%tracks.length;
+
+            document.getElementById("nowPlaying").textContent =
+                "Now Playing: " + tracks[currentTrack].name;
+        }
+    },stepTime);
+}
+
+currentAudio.addEventListener("ended", crossfade);
+
+function toggleMusic(){
+    if(!isPlaying){
+        playTrack(currentTrack);
+        isPlaying=true;
+    } else {
+        currentAudio.pause();
+        nextAudio.pause();
+        isPlaying=false;
+    }
+}
+
+window.addEventListener("load", ()=>{
+    playTrack(currentTrack);
+    isPlaying=true;
+});
+</script>
+
+</body>
+</html>
